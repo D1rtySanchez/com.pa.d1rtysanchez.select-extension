@@ -1,0 +1,49 @@
+{
+    "author": "D1rtySanchez",
+    "date": "2020-12-27",
+    "build": "115186",
+    "version": "0.5.0",
+    "context": "client",
+    "identifier": "com.pa.select-extension",
+    "display_name": "Select Extension",
+    "description": "Extra selection options, such as single closest unit.",
+    "icon": "https://cdn.palobby.com/ui/main/atlas/icon_atlas/img/strategic_icons/icon_si_orbital_lander.png",
+    "signature": " ",
+    "forum": "https://forums.planetaryannihilation.com/",
+    "priority": 100,
+    "scenes": {
+        "global_mod_list": [
+            "coui://ui/mods/select-extension/keybinds.js"
+        ],
+        "live_game": [
+            "coui://ui/mods/select-extension/live_game.js"
+        ]
+    },
+    "enabled": true,
+    "url": "https://palobby.com/mods/com.pa.bigger-icons.zip",
+    "download": "https://palobby.com/community-mods/downloads/com.pa.bigger-icons.zip",
+    "iconDownload": false,
+    "fileSystem": false,
+    "searchable": [
+        "titans",
+        "ui",
+		"select",
+		"selection",
+		"extension",
+		"keybind"
+    ],
+    "sort": "selext",
+    "authors": [
+        "mikeyh"
+    ],
+    "timestamp": 1602892800000,
+    "dependencies": [],
+    "companions": [],
+    "framework": false,
+    "available": true,
+    "titansOnly": false,
+    "classicOnly": false,
+    "classic": true,
+    "titans": true,
+    "conflicts": {}
+}
