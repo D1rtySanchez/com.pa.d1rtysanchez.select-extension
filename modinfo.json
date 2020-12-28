@@ -1,16 +1,15 @@
+
 {
-    "author": "D1rtySanchez",
-    "date": "2020-12-27",
+	"author": "D1rtySanchez",
     "build": "115186",
-    "version": "1.0.0",
+	"category": ["settings", "titans"],
     "context": "client",
-    "identifier": "com.pa.select-extension",
-    "display_name": "Select Extension",
+    "date": "2020-12-27",
     "description": "Extra selection options, such as single closest unit.",
-    "icon": "https://raw.githubusercontent.com/D1rtySanchez/com.pa.d1rtysanchez.select-extension/master/archive/icon.png",
-    "signature": " ",
+    "display_name": "Select Extension",
     "forum": "https://forums.planetaryannihilation.com/",
-    "priority": 100,
+    "identifier": "com.pa.d1rtysanchez.select-extension",
+	"priority": 100,
     "scenes": {
         "global_mod_list": [
             "coui://ui/mods/select-extension/keybinds.js"
@@ -18,32 +17,7 @@
         "live_game": [
             "coui://ui/mods/select-extension/live_game.js"
         ]
-    },
-    "enabled": true,
-    "url": "https://github.com/D1rtySanchez/com.pa.d1rtysanchez.select-extension/raw/master/archive/main.rar",
-    "download": "https://cdn.palobby.com/community-mods/downloads/com.pa.d1rtysanchez.select-extension.zip",
-    "iconDownload": false,
-    "fileSystem": false,
-    "searchable": [
-        "titans",
-        "ui",
-		"select",
-		"selection",
-		"extension",
-		"keybind"
-    ],
-    "sort": "selext",
-    "authors": [
-        "D1rtySanchez"
-    ],
-    "timestamp": 1602892800000,
-    "dependencies": [],
-    "companions": [],
-    "framework": false,
-    "available": true,
-    "titansOnly": false,
-    "classicOnly": false,
-    "classic": true,
-    "titans": true,
-    "conflicts": {}
+    },	
+	"signature": "not yet implemented",
+    "version": "1.0.0"
 }

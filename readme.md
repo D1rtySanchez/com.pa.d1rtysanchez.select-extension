@@ -24,8 +24,9 @@ Selects all idle scouts, very useful for Legion faction investigator push.
 Selects all radars, for checking radar coverage. This works as a toggle so you can quickly check your radar coverage.
 Checks zoom level to separate ground radars from orbital radars.
 
+[b]Select all Support[/b] - Support denotes siege, AA & combat fabber units
 [b]Select all Siege[/b] - Siege units are long range units like the mobile artillery.
-[b]Select all Support[/b] - Support is for both siege & AA
+[b]Select all AA[/b] - Self explanatory
 
 ----------------------
 
