@@ -17,7 +17,7 @@
 
   set = 'gameplay'
   display_sub_group = 'Selection'
-  kb('select_all_radars')
+  kb('toggle_radars')
   kb('select_all_fabbers')
   kb('select_all_idle_fabbers')
   kb('select_all_scouts')
@@ -26,9 +26,11 @@
   set = 'gameplay'
   display_sub_group = 'Selection Edit'
   kb('single_select_closest')
+  kb('only_support_in_selection')
+  kb('remove_support_from_selection')
   kb('only_siege_in_selection')
   kb('remove_siege_from_selection')
-  //kb('only_anti-air_in_selection')
-  //kb('remove_anti-air_from_selection')
+  kb('only_anti_air_in_selection')
+  kb('remove_anti_air_from_selection')
 
 })()

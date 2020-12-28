@@ -46,30 +46,86 @@
 	
 	// *************** Selections **************
 
-	model.select_all_radars = function () {
-		if (!model.selection()) {			
+	model.toggle_radars = function () {
 	
-			//var selectUnits = [];
+		var zoomLevel = api.camera.getFocus(api.Holodeck.focused.id).zoomLevel();
 	
-			// Hack to select legion deployed investigator bot radar (since it doesn't have "recon" type atm"), as a sideeffect it also selects all other buildings except  factories
-			api.select.onPlanetWithTypeFilter(model.currentFocusPlanetId(), 'Structure', 'Factory');
-			//api.select.fromSelectionWithTypeFilter('UNITTYPE_MetalProduction', null, true) }
-//			api.select.fromSelectionWithTypeFilter('Bot', null, false);
-//			api.select.fromSelectionWithTypeFilter('Scout', null, false);
+		selectRadarsFix = function () {		
+	
+			var selectionTypes = model.selectionTypes();
+			//console.log (selectionTypes);
 			
+			var nonRadarTypes = [];
+	
+			for (var i = 0; i < selectionTypes.length; i++) {
+				var selectionType = selectionTypes[i];
+				var unitSpec = model.unitSpecs[selectionType];
+				//if (zoomLevel !== 'orbital' && zoomLevel !== 'celestial') {
+				if (!(_.contains(unitSpec.types,"UNITTYPE_Recon") || (_.contains(unitSpec.types,"UNITTYPE_Structure") && _.contains(unitSpec.types,"UNITTYPE_Bot") && _.contains(unitSpec.types,"UNITTYPE_Scout")) )) {
+					nonRadarTypes.push(selectionType);
+				}
+			}
+			
+			if (nonRadarTypes.length > 0) {
+				model.holodeck.view.selectByTypes("remove", nonRadarTypes);
+			}
+			
+		}
+		
+		selectRadars = function () {
+			if (zoomLevel !== 'orbital' && zoomLevel !== 'celestial') {
+				api.select.onPlanetWithTypeFilter(model.currentFocusPlanetId(), 'Structure', 'Factory');		
+				setTimeout(selectRadarsFix,50);
+			} else {
+				api.select.onPlanetWithTypeFilter(model.currentFocusPlanetId(), 'Orbital', 'Structure');		
+				api.select.fromSelectionWithTypeFilter('Recon', null, false);
+			}
+		}
+		
+		// Nothing is selected, select radars directly
+		if (!model.selection()) {			
+
+			// Use code below once legion is fixed
+//			api.select.onPlanetWithTypeFilter(model.currentFocusPlanetId(), 'Structure', 'Factory');		
+//			api.select.fromSelectionWithTypeFilter('Recon', null, false);
+
+			// HACK temporary until legion adds missing "Recon" tag to the deployed investigator			
+			selectRadars();
+			
+		// Something is selected, if it's radars then deselect them first
 		} else {
-			//var unitData = model.selection();
-			//var unitData = model.selection();
+		
+			if (!model.selectionTypes()) return
+			var selectionTypes = model.selectionTypes();
+			var radarsAlreadySelected = false;
+		
+			for (var i = 0; i < selectionTypes.length; i++) {
+				var selectionType = selectionTypes[i];
+				var unitSpec = model.unitSpecs[selectionType];
+									
+				if (zoomLevel !== 'orbital' && zoomLevel !== 'celestial') {
+					console.log (selectionType);
+					if ((_.contains(unitSpec.types,"UNITTYPE_Recon") && !_.contains(unitSpec.types,"UNITTYPE_Orbital")) || (_.contains(unitSpec.types,"UNITTYPE_Structure") && _.contains(unitSpec.types,"UNITTYPE_Bot") && _.contains(unitSpec.types,"UNITTYPE_Scout")) ) {
+						console.log ("isRadar");
+						radarsAlreadySelected = true;
+					}
+				} else {
+					if (_.contains(unitSpec.types,"UNITTYPE_Orbital") && _.contains(unitSpec.types,"UNITTYPE_Recon") ) {
+						radarsAlreadySelected = true;
+					}				
+				}
+			}
+		
 			var selectedSpecs = model.selectionTypes();
-			//planetSpecs.forEach(function(spec) {
-			//for (var i = 0; i < unitData.length; i++) {
-//				if (selectSpecs[0] !== 'Recon') {
-				//if (unitData[0].hasOwnType('Recon') == true) {
-					api.select.empty();
-					model.selection(null);
-					return;
-//				}
-			//}
+
+			if (radarsAlreadySelected) {
+				api.select.empty();
+				model.selection(null);
+				return;
+			} else {
+				selectRadars();
+			}
+			
 		}
 	}
 
@@ -241,24 +297,48 @@
 		console.log ("Done2")*/
 	}
 	
+	// support (siege, anti-air & combat repair units)
+	model.only_support_in_selection = function() {
+		
+		if (!model.selectionTypes()) return
+		var selectionTypes = model.selectionTypes();
+		var supportTypes = [];
+		var nonSupportTypes = [];
+		
+		for (var i = 0; i < selectionTypes.length; i++) {
+			var selectionType = selectionTypes[i];
+			var unitSpec = model.unitSpecs[selectionType];
+			if (_.contains(unitSpec.types,"UNITTYPE_Artillery") || _.contains(unitSpec.types,"UNITTYPE_AirDefense") || (_.contains(unitSpec.types,"UNITTYPE_Offense") && _.contains(unitSpec.types,"UNITTYPE_Construction")) ) {
+				//console.log (selectionType);
+				//supportTypes.push(selectionType);
+			} else {
+				nonSupportTypes.push(selectionType);
+			}
+		}
+		
+		if (nonSupportTypes.length > 0) {
+			model.holodeck.view.selectByTypes("remove", nonSupportTypes);
+		}
+		
+	}
+	
+	model.remove_support_from_selection = function() {
+		api.select.fromSelectionWithTypeFilter('AirDefense', null, true) 
+		api.select.fromSelectionWithTypeFilter('Artillery', null, true)
+	}
+	
 	// siege (long range mobile units)
 	model.only_siege_in_selection = function() {
     api.select.fromSelectionWithTypeFilter('Artillery', null, false) }
 	model.remove_siege_from_selection = function() {
     api.select.fromSelectionWithTypeFilter('Artillery', null, true) }
 	
-//	model.single_select_closest = input.doubleTap( function() {
-//		if (!model.selection()) return
-//		var unit = _.chain(model.selection().spec_ids)
-//			.toArray()
-//			.flatten()
-//			.sample()
-//			.value()
-//		if (!unit) return
-//		engine.call("select.byIds", [unit])
-//	}, function() {
-//		api.camera.track(true)
-//	})
+	// mobile anti-air
+	model.only_anti_air_in_selection = function() {
+    api.select.fromSelectionWithTypeFilter('AirDefense', null, false) }
+	model.remove_anti_air_in_selection = function() {
+    api.select.fromSelectionWithTypeFilter('AirDefense', null, true) }
+	
 
 	api.Panel.message('', 'inputmap.reload');
 })()

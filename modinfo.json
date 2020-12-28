@@ -2,12 +2,12 @@
     "author": "D1rtySanchez",
     "date": "2020-12-27",
     "build": "115186",
-    "version": "0.5.0",
+    "version": "1.0.0",
     "context": "client",
     "identifier": "com.pa.select-extension",
     "display_name": "Select Extension",
     "description": "Extra selection options, such as single closest unit.",
-    "icon": "https://cdn.palobby.com/ui/main/atlas/icon_atlas/img/strategic_icons/icon_si_orbital_lander.png",
+    "icon": "https://raw.githubusercontent.com/D1rtySanchez/com.pa.d1rtysanchez.select-extension/master/archive/icon.png",
     "signature": " ",
     "forum": "https://forums.planetaryannihilation.com/",
     "priority": 100,
@@ -34,7 +34,7 @@
     ],
     "sort": "selext",
     "authors": [
-        "mikeyh"
+        "d1rtysanchez"
     ],
     "timestamp": 1602892800000,
     "dependencies": [],
