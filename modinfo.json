@@ -20,8 +20,8 @@
         ]
     },
     "enabled": true,
-    "url": "https://palobby.com/mods/com.pa.bigger-icons.zip",
-    "download": "https://palobby.com/community-mods/downloads/com.pa.bigger-icons.zip",
+    "url": "https://github.com/D1rtySanchez/com.pa.d1rtysanchez.select-extension/raw/master/archive/main.rar",
+    "download": "https://cdn.palobby.com/community-mods/downloads/com.pa.d1rtysanchez.select-extension.zip",
     "iconDownload": false,
     "fileSystem": false,
     "searchable": [
@@ -34,7 +34,7 @@
     ],
     "sort": "selext",
     "authors": [
-        "d1rtysanchez"
+        "D1rtySanchez"
     ],
     "timestamp": 1602892800000,
     "dependencies": [],
