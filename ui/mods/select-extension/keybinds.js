@@ -22,6 +22,7 @@
   kb('select_all_idle_fabbers')
   kb('select_all_scouts')
   kb('select_all_idle_scouts')
+  kb('select_all_repair')
   
   set = 'gameplay'
   display_sub_group = 'Selection Edit'
@@ -32,5 +33,7 @@
   kb('remove_siege_from_selection')
   kb('only_anti_air_in_selection')
   kb('remove_anti_air_from_selection')
+  //kb('only_repair_in_selection')
+  //kb('remove_repair_from_selection')
 
 })()

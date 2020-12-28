@@ -44,8 +44,12 @@
 		return normalizedVector;
 	}
 	
-	// *************** Selections **************
+	
+	// =================================================
+	// =================   Selections  ====================
+	// =================================================
 
+	
 	model.toggle_radars = function () {
 	
 		var zoomLevel = api.camera.getFocus(api.Holodeck.focused.id).zoomLevel();
@@ -104,9 +108,9 @@
 				var unitSpec = model.unitSpecs[selectionType];
 									
 				if (zoomLevel !== 'orbital' && zoomLevel !== 'celestial') {
-					console.log (selectionType);
+					//console.log (selectionType);
 					if ((_.contains(unitSpec.types,"UNITTYPE_Recon") && !_.contains(unitSpec.types,"UNITTYPE_Orbital")) || (_.contains(unitSpec.types,"UNITTYPE_Structure") && _.contains(unitSpec.types,"UNITTYPE_Bot") && _.contains(unitSpec.types,"UNITTYPE_Scout")) ) {
-						console.log ("isRadar");
+						//console.log ("isRadar");
 						radarsAlreadySelected = true;
 					}
 				} else {
@@ -185,7 +189,8 @@
 					//console.log (myUnitId + " 2 | " + unitPos2);
 					
 					// Add to selection array if idle
-					if ((unitPos1[0] == unitPos2[0]) && (unitPos1[1] == unitPos2[1]) && (unitPos1[2] == unitPos2[2])) {
+					//if ((unitPos1[0] == unitPos2[0]) && (unitPos1[1] == unitPos2[1]) && (unitPos1[2] == unitPos2[2])) {		// doesn't work with air scout, as they slightly move when idle
+					if ( (Math.abs(unitPos1[0] - unitPos2[0]) < 0.05) && (Math.abs(unitPos1[1] - unitPos2[1]) < 0.05) && (Math.abs(unitPos1[2] - unitPos2[2]) < 0.05) ) {
 						//console.log (myUnitId + " is idle");
 						idleScouts.push (myUnitId);
 					}
@@ -234,8 +239,44 @@
 		setTimeout(findIdleScouts,50);
 			
 	}
+	
+	model.select_all_repair = function () {		
+		
+		api.select.onPlanetWithTypeFilter(model.currentFocusPlanetId(), 'Mobile', 'Fabers');
+	
+		selectRepair = function () {
+	
+			if (!model.selectionTypes()) return
+			var selectionTypes = model.selectionTypes();
+			var nonRepairTypes = [];
+			
+			for (var i = 0; i < selectionTypes.length; i++) {
+				var selectionType = selectionTypes[i];
+				var unitSpec = model.unitSpecs[selectionType];
+				if (!_.contains(unitSpec.types,"UNITTYPE_Commander") && (_.contains(unitSpec.types,"UNITTYPE_Construction") && !_.contains(unitSpec.types,"UNITTYPE_Fabber")) || (_.contains(unitSpec.types,"UNITTYPE_MissileDefense") && _.contains(unitSpec.types,"UNITTYPE_Air") && _.contains(unitSpec.types,"UNITTYPE_Advanced")) ) {
+					//console.log (selectionType);
+					//supportTypes.push(selectionType);
+				} else {
+					nonRepairTypes.push(selectionType);
+				}
+			}
+			
+			if (nonRepairTypes.length > 0) {
+				model.holodeck.view.selectByTypes("remove", nonRepairTypes);
+			} else {			
+				api.select.empty();
+				model.selection(null);	
+			}
 
-	// *************** Selection Edit **************
+		}
+		
+		setTimeout(selectRepair,50);
+	}
+	
+
+	// =================================================
+	// ===============   Selection Edit   ===================
+	// =================================================
 
 
 	model.single_select_closest = function() {
@@ -308,7 +349,7 @@
 		for (var i = 0; i < selectionTypes.length; i++) {
 			var selectionType = selectionTypes[i];
 			var unitSpec = model.unitSpecs[selectionType];
-			if (_.contains(unitSpec.types,"UNITTYPE_Artillery") || _.contains(unitSpec.types,"UNITTYPE_AirDefense") || (_.contains(unitSpec.types,"UNITTYPE_Offense") && _.contains(unitSpec.types,"UNITTYPE_Construction")) ) {
+			if ( _.contains(unitSpec.types,"UNITTYPE_Artillery") || _.contains(unitSpec.types,"UNITTYPE_AirDefense") || (_.contains(unitSpec.types,"UNITTYPE_Construction") && !_.contains(unitSpec.types,"UNITTYPE_Fabber")) || (_.contains(unitSpec.types,"UNITTYPE_MissileDefense") && _.contains(unitSpec.types,"UNITTYPE_Air") && _.contains(unitSpec.types,"UNITTYPE_Advanced")) ) {
 				//console.log (selectionType);
 				//supportTypes.push(selectionType);
 			} else {
@@ -318,27 +359,56 @@
 		
 		if (nonSupportTypes.length > 0) {
 			model.holodeck.view.selectByTypes("remove", nonSupportTypes);
+		} else {			
+			api.select.empty();
+			model.selection(null);	
 		}
 		
 	}
 	
 	model.remove_support_from_selection = function() {
-		api.select.fromSelectionWithTypeFilter('AirDefense', null, true) 
-		api.select.fromSelectionWithTypeFilter('Artillery', null, true)
+		//api.select.fromSelectionWithTypeFilter('AirDefense', null, true) 
+		//api.select.fromSelectionWithTypeFilter('Artillery', null, true)
+		//api.select.fromSelectionWithTypeFilter('MissileDefense', null, true)		// removed because (!) too hacky (2) missile defense units need to stay in the main lines (3) angels don't get selected with main force anyway
+		
+		if (!model.selectionTypes()) return
+		var selectionTypes = model.selectionTypes();
+		var supportTypes = [];
+		var nonSupportTypes = [];
+		
+		for (var i = 0; i < selectionTypes.length; i++) {
+			var selectionType = selectionTypes[i];
+			var unitSpec = model.unitSpecs[selectionType];
+			if (_.contains(unitSpec.types,"UNITTYPE_Artillery") || _.contains(unitSpec.types,"UNITTYPE_AirDefense") || (_.contains(unitSpec.types,"UNITTYPE_Construction") && !_.contains(unitSpec.types,"UNITTYPE_Fabber")) || (_.contains(unitSpec.types,"UNITTYPE_MissileDefense") && _.contains(unitSpec.types,"UNITTYPE_Air") && _.contains(unitSpec.types,"UNITTYPE_Advanced")) ) {
+				//console.log (selectionType);
+				supportTypes.push(selectionType);
+			} else {
+				//nonSupportTypes.push(selectionType);
+			}
+		}
+		
+		if (supportTypes.length > 0) {
+			model.holodeck.view.selectByTypes("remove", supportTypes);
+		}
 	}
 	
-	// siege (long range mobile units)
+	// Siege (long range mobile units)
 	model.only_siege_in_selection = function() {
     api.select.fromSelectionWithTypeFilter('Artillery', null, false) }
 	model.remove_siege_from_selection = function() {
     api.select.fromSelectionWithTypeFilter('Artillery', null, true) }
 	
-	// mobile anti-air
+	// Mobile anti-air
 	model.only_anti_air_in_selection = function() {
     api.select.fromSelectionWithTypeFilter('AirDefense', null, false) }
 	model.remove_anti_air_in_selection = function() {
     api.select.fromSelectionWithTypeFilter('AirDefense', null, true) }
 	
+	// Repair units <- removed, it's a real mess
+	/*model.only_repair_in_selection = function() {
+	api.select.fromSelectionWithTypeFilter('Construction', null, false); }
+	model.remove_repair_from_selection = function() {
+	api.select.fromSelectionWithTypeFilter('Construction', null, true); }*/
 
 	api.Panel.message('', 'inputmap.reload');
 })()

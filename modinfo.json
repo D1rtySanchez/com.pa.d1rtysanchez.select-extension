@@ -1,10 +1,10 @@
 
 {
 	"author": "D1rtySanchez",
-    "build": "115186",
-	"category": ["settings", "titans"],
+    "build": "115280",
+	"category": [ "settings", "titans", "ui", "select", "selection", "extension", "keybind", "closest", "radar", "coverage", "single" ],
     "context": "client",
-    "date": "2020-12-27",
+    "date": "2020-12-29",
     "description": "Extra selection options, such as single closest unit.",
     "display_name": "Select Extension",
     "forum": "https://forums.planetaryannihilation.com/",
@@ -19,5 +19,5 @@
         ]
     },	
 	"signature": "not yet implemented",
-    "version": "1.0.0"
+    "version": "1.0.1"
 }
