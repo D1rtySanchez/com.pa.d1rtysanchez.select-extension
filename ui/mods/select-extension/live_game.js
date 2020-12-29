@@ -157,7 +157,7 @@
 	}
 	
 	model.select_all_scouts = function () {
-		api.select.onPlanetWithTypeFilter(model.currentFocusPlanetId(), 'Scout');
+		api.select.onPlanetWithTypeFilter(model.currentFocusPlanetId(), 'Scout', 'Structure');
 	}
 	
 	// No built-in way to check idle behaviour (idle fabbers/factories are hardcoded)
