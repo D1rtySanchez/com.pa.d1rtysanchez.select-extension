@@ -7,7 +7,7 @@
     "date": "2020-12-29",
     "description": "Extra selection options, such as single closest unit.",
     "display_name": "Select Extension",
-    "forum": "https://forums.planetaryannihilation.com/",
+    "forum": "https://forums.planetaryannihilation.com/threads/rel-client-select-extension.73532/",
     "identifier": "com.pa.d1rtysanchez.select-extension",
 	"priority": 100,
     "scenes": {
