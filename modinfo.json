@@ -8,7 +8,8 @@
     "description": "Extra selection options, such as single closest unit.",
     "display_name": "Select Extension",
     "forum": "https://forums.planetaryannihilation.com/threads/rel-client-select-extension.73532/",
-    "identifier": "com.pa.d1rtysanchez.select-extension",
+	"icon": "https://raw.githubusercontent.com/D1rtySanchez/com.pa.d1rtysanchez.select-extension/master/archive/icon.png",
+    "identifier": "com.pa.d1rtysanchez.select-extension",	
 	"priority": 100,
     "scenes": {
         "global_mod_list": [
